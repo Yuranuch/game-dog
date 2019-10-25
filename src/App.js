@@ -1,21 +1,25 @@
 import React, {Component} from 'react';
 import './App.css';
 import photo from "./images/dog.jpg"
+import photo_2 from "./images/dog_2.png"
+
+import voice from "./images/dog.mp3"
 import {connect} from "react-redux";
 import {imageClick, randomImage} from "./redux/reducer";
 
 class App extends Component {
     componentDidMount() {
+        this.audioRef=React.createRef()
         setInterval (()=>{
             this.props.randomImage()
+
         },1000)
     }
 
     onImageClick = () => {
+        this.audioRef.current.currentTime=0
+        this.audioRef.current.play()
         this.props.imageClick()
-    }
-    getRandomImageIndex = ()=> {
-        return Math.floor(Math.random() * 9);
     }
 
     render() {
@@ -31,12 +35,12 @@ class App extends Component {
         {id:8},
     ]
 
-        const elements = photos.map(d => <div className="item"><img src={photo} onClick={this.onImageClick}
+        const elements = photos.map(d => <div className="item"><img src={this.props.firstPhoto} onClick={this.onImageClick}
             className={this.props.currentPhotoId === d.id? "photo show": "photo"}/></div>)
-
 
         return (
             <div>
+                <audio ref={this.audioRef} src={voice}></audio>
                 <div className="wrapper">
                     {elements}
                 </div>
@@ -50,8 +54,8 @@ class App extends Component {
 const mapStateToProps = (state) => {
     return {
         currentPhotoId: state.currentPhotoId,
-        counter: state.counter
-
+        counter: state.counter,
+        firstPhoto: state.firstPhoto
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -62,7 +66,6 @@ const mapDispatchToProps = (dispatch) => {
         randomImage: () => {
             dispatch(randomImage())
         }
-
     }
 }
 
