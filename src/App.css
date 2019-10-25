@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 .counter {
   text-align: center;
@@ -28,4 +30,14 @@
 
 .show {
   visibility: visible;
+
+}
+.disable {
+    width: 170px;
+    margin: 100px auto 10px auto;
+    pointer-events: none;
+}
+.navigation {
+    margin: 20px auto 0 auto;
+    max-width: 700px;
 }

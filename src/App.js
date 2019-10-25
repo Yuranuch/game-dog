@@ -5,15 +5,20 @@ import photo_2 from "./images/dog_2.png"
 
 import voice from "./images/dog.mp3"
 import {connect} from "react-redux";
-import {imageClick, randomImage} from "./redux/reducer";
+import {
+    imageClick,
+    randomImage,
+    reduceTime,
+    startAnimation,
+    startEvents,
+    stopAnimation,
+    stopEvents
+} from "./redux/reducer";
 
 class App extends Component {
     componentDidMount() {
         this.audioRef=React.createRef()
-        setInterval (()=>{
-            this.props.randomImage()
 
-        },1000)
     }
 
     onImageClick = () => {
@@ -21,6 +26,27 @@ class App extends Component {
         this.audioRef.current.play()
         this.props.imageClick()
     }
+    onStartEvents = () => {
+
+        // setInterval(()=>{
+        //     this.props.reduceTime()
+        // },1000)
+
+
+        this.props.startEvents()
+        this.props.startAnimation()
+        setInterval(() => {
+            if (this.props.animation) {
+                this.props.randomImage()
+            }
+        }, 1000)
+    }
+    onStopEvents = () => {
+        this.props.stopAnimation()
+        this.props.stopEvents()
+
+    }
+
 
     render() {
     const photos = [
@@ -39,9 +65,15 @@ class App extends Component {
             className={this.props.currentPhotoId === d.id? "photo show": "photo"}/></div>)
 
         return (
-            <div>
+            <div className="App">
+                {/*<span>{this.props.timeOut}</span>*/}
                 <audio ref={this.audioRef} src={voice}></audio>
-                <div className="wrapper">
+                <div className="navigation">
+                    <button onClick={this.onStartEvents}>Start</button>
+                    <button onClick={this.onStopEvents}>Stop</button>
+                </div>
+
+                <div className={this.props.disableState === true ? "disable":"wrapper"}>
                     {elements}
                 </div>
                 <div className="counter">
@@ -55,9 +87,13 @@ const mapStateToProps = (state) => {
     return {
         currentPhotoId: state.currentPhotoId,
         counter: state.counter,
-        firstPhoto: state.firstPhoto
+        firstPhoto: state.firstPhoto,
+        disableState: state. disableState,
+        animation: state.animation,
+        timeOut: state.timeOut
     }
 }
+
 const mapDispatchToProps = (dispatch) => {
     return {
         imageClick: () => {
@@ -65,6 +101,22 @@ const mapDispatchToProps = (dispatch) => {
         },
         randomImage: () => {
             dispatch(randomImage())
+        },
+        startEvents: () => {
+            dispatch(startEvents())
+        },
+        startAnimation: () => {
+            dispatch(startAnimation())
+        },
+        stopAnimation: () => {
+
+            dispatch(stopAnimation())
+        },
+        stopEvents: () => {
+            dispatch(stopEvents())
+        },
+        reduceTime: () => {
+            dispatch(reduceTime())
         }
     }
 }
