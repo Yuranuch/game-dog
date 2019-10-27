@@ -29,7 +29,6 @@ class App extends Component {
         setInterval(() => {
             if (this.props.animation) {
                 this.props.randomImage()
-                this.deadDogs()
             }
 
         }, 1000)
